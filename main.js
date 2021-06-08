@@ -2,6 +2,13 @@
 
 const path = require("path");
 const { app, BrowserWindow } = require("electron");
+const { off } = require("process");
+
+const initialSate = {
+  status: "off",
+  time: 1200,
+  timer: null,
+};
 
 function main() {
   // create new window
