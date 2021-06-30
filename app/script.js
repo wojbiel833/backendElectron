@@ -2,28 +2,64 @@ import React from "react";
 import { render } from "react-dom";
 
 class App extends React.Component {
+  state = {
+    status: "off",
+    time: 1200,
+    timer: null,
+  };
+
   render() {
     const { status, time, timer } = this.state;
 
-    const startBtn = document.querySelector(".btnStart");
-
-    formatTime = () => {
-      const minutes = time / 60;
-      const seconds = time / 60 / 60;
+    const formatTime = () => {
+      const minutes = time / 60 + "";
+      const seconds = minutes / 60 + "";
 
       return `${minutes.padStart(2, "0")}:${seconds.padStart(2, "0")}`;
     };
 
-    step = () => {};
+    const step = () => {
+      if (this.state.time === 0) {
+        playBell();
+        this.setState({
+          time: (this.state.status === 'work' ) ?
 
-    startTimer = () => {
-      this.time = 1200;
+          this.state.status === 'rest' && this.setState(time: 20) 
+          
+          : 
+          this.state.status === 'work' && this.setState(time: 1200),
+        });
+      } else {
+        this.setState({
+          time: this.state.time - 1,
+        });
+      }
+    };
 
+      const playBell = () => {
+        const bell = new Audio('./sounds/bell.wav');
+        bell.play();
+      }
+
+    const startTimer = () => {
       this.setState({
+        time: 1200,
         status: "work",
         timer: setInterval(this.step, 1000),
       });
     };
+
+    const stopTimer = () => {
+        clearInterval(this.timer);
+        this.setState({
+          time: 0,
+          status: 'off'
+        })
+    }
+
+    const closeApp = () => {
+      window.close()
+    }
 
     return (
       <div>
@@ -41,7 +77,9 @@ class App extends React.Component {
                 time to rest.
               </p>
             </div>
-            <button className="btnStart">Start</button>
+            <button className="btn" onClick={startTimer}>
+              Start
+            </button>
           </div>
         ) : (
           ""
@@ -51,24 +89,14 @@ class App extends React.Component {
         {status != "off" ? (
           <div>
             <div className="timer">{formatTime()}</div>
-            <button className="btn">Stop</button>
+            <button className="btn" onClick={stopTimer}>Stop</button>
           </div>
         ) : (
           ""
         )}
 
-        <button className="btn btn-close">X</button>
+        <button className="btn btn-close" onClick={closeApp}>X</button>
       </div>
-      //   <div>
-      //   <h1>Protect your eyes</h1>
-      //   {(status === 'off') && <AppDescription />}
-      //   {(status === 'work') && <img src="./images/work.png" />}
-      //   {(status === 'rest') && <img src="./images/rest.png" />}
-      //   {(status !== 'off') && <div className="timer">18:23</div>}
-      //   {(status === 'off') && <button className="btn">Start</button>}
-      //   {(status !== 'off') && <button className="btn">Stop</button>}
-      //   <button className="btn btn-close">X</button>
-      // </div>
     );
   }
 }
