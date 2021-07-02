@@ -12,34 +12,44 @@ class App extends React.Component {
     const { status, time, timer } = this.state;
 
     const formatTime = () => {
-      const minutes = time / 60 + "";
-      const seconds = minutes / 60 + "";
+      const minutes = Math.round(time / 60) + "";
+      const seconds = Math.round(minutes / 60) + "";
 
       return `${minutes.padStart(2, "0")}:${seconds.padStart(2, "0")}`;
     };
 
+    const playBell = () => {
+      const bell = new Audio("./sounds/bell.wav");
+      bell.play();
+    };
+
+    const countDown = () => {
+      this.setState({
+        timer: setInterval(() => {
+          this.state.time - 1;
+        }, 1000),
+      });
+    };
     const step = () => {
       if (this.state.time === 0) {
         playBell();
-        this.setState({
-          time: (this.state.status === 'work' ) ?
-
-          this.state.status === 'rest' && this.setState(time: 20) 
-          
-          : 
-          this.state.status === 'work' && this.setState(time: 1200),
-        });
+        if (this.state.status === "work") {
+          this.setState({
+            status: "rest",
+            time: 20,
+          });
+        } else if (this.state.status === "rest") {
+          this.setState({
+            status: "work",
+            time: 1200,
+          });
+        }
       } else {
         this.setState({
-          time: this.state.time - 1,
+          timer: this.countDown,
         });
       }
     };
-
-      const playBell = () => {
-        const bell = new Audio('./sounds/bell.wav');
-        bell.play();
-      }
 
     const startTimer = () => {
       this.setState({
@@ -50,16 +60,16 @@ class App extends React.Component {
     };
 
     const stopTimer = () => {
-        clearInterval(this.timer);
-        this.setState({
-          time: 0,
-          status: 'off'
-        })
-    }
+      clearInterval(this.timer);
+      this.setState({
+        time: 0,
+        status: "off",
+      });
+    };
 
     const closeApp = () => {
-      window.close()
-    }
+      window.close();
+    };
 
     return (
       <div>
@@ -89,13 +99,17 @@ class App extends React.Component {
         {status != "off" ? (
           <div>
             <div className="timer">{formatTime()}</div>
-            <button className="btn" onClick={stopTimer}>Stop</button>
+            <button className="btn" onClick={stopTimer}>
+              Stop
+            </button>
           </div>
         ) : (
           ""
         )}
 
-        <button className="btn btn-close" onClick={closeApp}>X</button>
+        <button className="btn btn-close" onClick={closeApp}>
+          X
+        </button>
       </div>
     );
   }
